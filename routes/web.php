@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\CostomerController;
+use App\Http\Controllers\PaymentsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,13 +39,18 @@ Route::group(['middleware' => ['auth']], function () {
     Route::view('/customers', 'customers.index');
     Route::get('/get-customers',[CostomerController::class,'index'])->name('getcustomers');
     Route::post('/add-customer',[CostomerController::class,'store'])->name('add_customer');
+    Route::post('/update-customer',[CostomerController::class,'update'])->name('update_customer');
     Route::get('/delete-customer/{id}',[CostomerController::class,'delete'])->name('delete_customer');
-    Route::get('/find-customer/{id}',[CostomerController::class,'findcustomer'])->name('find_customer');
+    Route::get('/find-customer/{username}',[CostomerController::class,'findcustomer'])->name('find_customer');
       //**********************END OF INVOICES ROUTES ******************//
 
      //********************** INVOICES ROUTES ******************//
-    Route::view('/invoices', 'invoices.index');
+    Route::view('/invoices_payments', 'invoices.index');
     Route::get('/get-invoices',[InvoiceController::class,'index'])->name('getinvoices');
       //**********************END OF INVOICES ROUTES ******************//
+
+      //********************** PAYMENTS ROUTES ******************//
+    Route::get('/get-payments',[PaymentsController::class,'index'])->name('getpayments');
+      //**********************END OF PAYMENTS ROUTES ******************//
 
 });

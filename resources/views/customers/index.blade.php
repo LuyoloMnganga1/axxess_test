@@ -29,7 +29,6 @@ Customers
                         <th style="background-color: #2d2847; color: white;">#</th>
                         <th style="background-color: #2d2847; color: white;">Name</th>
                         <th style="background-color: #2d2847; color: white;">Address</th>
-                        <th style="background-color: #2d2847; color: white;">Created Date</th>
                         <th style="background-color: #2d2847; color: white;">Username</th>
                         <th style="background-color: #2d2847; color: white;">Balance</th>
                         <th style="background-color: #2d2847; color: white;">Action</th>
@@ -93,16 +92,17 @@ Customers
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{route('add_customer')}}" method="POST">
+                <form action="{{route('update_customer')}}" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="allocation_status">Ful Name</label>
                         <input type="text" class="form-control" name="name" id="name" required
                             id="">
                     </div>
+                    <input type="hidden" name="id" id="rowid">
                     <div class="form-group">
                         <label for="allocation_status">Address</label>
-                        <textarea name="address" id="address" cols="10" rows="3" id="address" class="form-control" required></textarea>
+                        <textarea name="address"  cols="10" rows="3" id="address" class="form-control" required></textarea>
                     </div>
                     <div class="form-group">
                         <label for="">Username</label>
@@ -115,7 +115,7 @@ Customers
                             id="">
                     </div>
                    <div class="modal-footer">
-                    <button type="submit" class="btn  btn-sm btn-success">Add</button> &nbsp;<a href="#" data-dismiss="modal" id="update_profile" class="btn  btn-sm btn-secondary">Cancel</a>
+                    <button type="submit" class="btn  btn-sm btn-success">Update</button> &nbsp;<a href="#" data-dismiss="modal" id="update_profile" class="btn  btn-sm btn-secondary">Cancel</a>
                    </div>
                 </form>
             </div>
@@ -123,6 +123,49 @@ Customers
     </div>
     </div>
     {{-- END OF EDIT CUSTOMER MODAL --}}
+     {{-- VIEW CUSTOMER MODAL --}}
+<div id="view_customer" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5><strong>Customer Details</strong></h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    <div class="form-group">
+                        <label for="allocation_status">Ful Name</label>
+                        <input type="text" class="form-control" name="name" id="view_name" readonly
+                            id="">
+                    </div>
+                    <div class="form-group">
+                        <label for="allocation_status">Address</label>
+                        <textarea name="address"  cols="10" rows="3" id="view_address" class="form-control" readonly></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Username</label>
+                        <input type="email" class="form-control" name="username" id="view_username"  readonly
+                            id="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Created Date</label>
+                        <input type="datetime-local" class="form-control" name="date_created" id="view_date_created"  readonly
+                            id="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Balance</label>
+                        <input type="text" class="form-control" name="balance"  id="view_balance" readonly
+                    </div>
+                   <div class="modal-footer">
+                    <a href="#" data-dismiss="modal" class="btn  btn-sm btn-secondary">Close</a>
+                   </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    {{-- END OF VIEW CUSTOMER MODAL --}}
 @endsection
 @section('scripts')
 <script>
@@ -154,14 +197,6 @@ Customers
                     searchable: true,
                     print: true,
                    
-                },
-                {
-                    data: 'date_created',
-                    name: 'date_created',
-                    orderable: true,
-                    searchable: true,
-                    print: true,
-                    className: 'text-center'
                 },
                 {
                     data: 'username',
@@ -196,18 +231,37 @@ Customers
 </script>
 <script>
    $(document).ready(function () {
+    //oclick of edit button
         $('body').on('click', '#edit', function() {
-            var customer_id = $(this).data('id');
-            var  url = "{{ route('find_customer',['id'=>':id']) }}";
-             url = url.replace(':id',customer_id);
+            var url = $(this).data('href');
             $.get(url, function(data) {
-                    console.log(data);
-                    $('#address').val(data.address);
+                    $('textarea#address').val(data.address);
                     $('#name').val(data.name);
+                    $('#rowid').val(data.id);
                     $('#username').val(data.username);
                     $('#balance').val(data.balance);
                     $('#edit_customer').modal('show');
             })
+        });
+
+        //oclick of view button
+        $('body').on('click', '#view', function() {
+            var url = $(this).data('href');
+            $.get(url, function(data) {
+                    $('textarea#view_address').val(data.address);
+                    $('#view_name').val(data.name);
+                    $('#view_username').val(data.username);
+                    $('#view_date_created').val(data.date_created)
+                    $('#view_balance').val(data.balance);
+                    $('#view_customer').modal('show');
+            })
+        });
+
+        //onclck of delete button
+        $('body').on('click', '#delete', function() {
+            var url = $(this).data('href');
+            $("#yes").attr("href",url);
+            $('#delete_confirm').modal('show');            
         });
    });
 </script>

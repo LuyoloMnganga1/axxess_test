@@ -32,12 +32,6 @@ class CostomerController extends Controller
                 return $address;
              })
             //************** END OF ADDRESS  COLUMN**********//
-             //**************DATE  COLUMN**********//
-             ->addColumn('date_created', function ($row) {
-                $date_created = Carbon::parse($row->date_created)->format('Y-m-d H:m:i');
-                return $date_created;
-             })
-            //************** END OF DATE  COLUMN**********//
              //**************USERNAME  COLUMN**********//
              ->addColumn('username', function ($row) {
                 $username = $row->username;
@@ -53,13 +47,14 @@ class CostomerController extends Controller
                //**************ACTION COLUMN**********//
                ->addColumn('action', function ($row) {
                 $action = '<div class="btn-group">
-                <a type="button" class="btn btn-sm btn-warning text-light" data-id="'.$row->id.'" id="edit">Edit</a>
-                <a type="button" class="btn btn-sm btn-danger text-light" id ="delete" onclick="return confirm("Note: deleting this customer will clear all the customer records.\nAre you sure you want to delete this customer?");" href="/delete-customer/'.$row->id.'">Delete</a>
+                <a type="button" class="btn btn-sm btn-info text-light" data-href="/find-customer/'.$row->username.'" id="view">View</a>
+                <a type="button" class="btn btn-sm btn-warning text-light" data-href="/find-customer/'.$row->username.'" id="edit">Edit</a>
+                <a type="button" class="btn btn-sm btn-danger text-light" id ="delete"  data-href="/delete-customer/'.$row->id.'">Delete</a>
                 </div>';
                 return $action;
             })
             //**********END ACTION COLUMN*********//
-             ->rawColumns(['name', 'address','date_created','username','balance','action'])
+             ->rawColumns(['name', 'address','username','balance','action'])
              ->make(true);
         }
         return view('costomers.index');
@@ -84,6 +79,25 @@ class CostomerController extends Controller
           ]);
           return redirect()->back()->with('success', 'Customer created successfully.');
     }
+    public function update(Request $request){
+        $id = $request->id;
+        $validator = Validator::make($request->all(), [
+            'username' => ['required','email','unique:customers,username,'.$id],
+            'name'=>['required','string'],
+            'address'=>['required','string'],
+            'balance'=>['required','numeric'],
+        ]);
+        if ($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
+          }
+          customers::where('id',$id)->update([
+            'name' => $request->name,
+            'address' => $request->address,
+            'username' => $request->username,
+            'balance' => $request->balance,
+          ]);
+          return redirect()->back()->with('success', 'Customer updated successfully.');
+    }
     public function delete($id){
         customers::where('id', $id)->delete();
         $customer_invoice_id = invoices::where('customer_id',$id)->pluck('id')->toArray();
@@ -95,10 +109,8 @@ class CostomerController extends Controller
        
         return redirect()->back()->with('success', 'Customer deleted successfully.');
     }
-    public function findcustomer(Request $request,$id){
-       if($request->all()){
-        $customer = customers::where('id',$id)->first();
-        return response()->json($customer);
-       }
+    public function findcustomer($username){
+        $customer = customers::where('username',$username)->first();
+       return response()->json($customer);
     }
 }
