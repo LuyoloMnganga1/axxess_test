@@ -113,4 +113,8 @@ class CostomerController extends Controller
         $customer = customers::where('username',$username)->first();
        return response()->json($customer);
     }
+    public function allcustomers(){
+        $customers = customers::orderBy('name','asc')->get();
+        return response()->json($customers);
+    }
 }

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\payments;
+use App\Models\invoices;
 use Yajra\DataTables\DataTables;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class PaymentsController extends Controller
 {
@@ -34,17 +36,26 @@ class PaymentsController extends Controller
                 return $amount;
              })
             //************** END OF AMOUNT COLUMN**********//
-               //**************ACTION COLUMN**********//
-               ->addColumn('action', function ($row) {
-                $action = '<div class="btn-group">
-                <a type="button" class="btn btn-sm btn-warning text-light"  id="edit">Edit</a>
-                <a type="button" class="btn btn-sm btn-danger text-light" id ="delete" >Delete</a>
-                </div>';
-                return $action;
-            })
-            //**********END ACTION COLUMN*********//
-             ->rawColumns(['name', 'address','date_created','username','balance','action'])
+             ->rawColumns(['name', 'address','date_created','username','balance'])
              ->make(true);
         }
+    }
+    public function payment(Request $request){
+         $validator = Validator::make($request->all(), [
+            'amount'=>['required','numeric'],
+        ]);
+   
+        if ($validator->fails()){
+         return redirect()->back()->withErrors($validator)->withInput();
+       }
+       $invoice_amount = invoices::where('id',$request->invoice_id)->value('amount');
+       $payment_amount = $request->amount;
+       $balance = (float)  $invoice_amount - (float) $payment_amount;
+       $invoice = invoices::where('id',$request->invoice_id)->update(['amount'=> $balance]);
+       payments::create([
+            'customer_id' => $request->customer_id,
+            'amount' => $request->amount,
+       ]);
+       return redirect()->back()->with('success', 'Payment has been created successfully.');
     }
 }

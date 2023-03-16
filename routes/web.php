@@ -42,15 +42,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/update-customer',[CostomerController::class,'update'])->name('update_customer');
     Route::get('/delete-customer/{id}',[CostomerController::class,'delete'])->name('delete_customer');
     Route::get('/find-customer/{username}',[CostomerController::class,'findcustomer'])->name('find_customer');
+    Route::get('/all-customers',[CostomerController::class,'allcustomers'])->name('all_customers');
       //**********************END OF INVOICES ROUTES ******************//
 
      //********************** INVOICES ROUTES ******************//
     Route::view('/invoices_payments', 'invoices.index');
     Route::get('/get-invoices',[InvoiceController::class,'index'])->name('getinvoices');
+    Route::post('/add-invoice',[InvoiceController::class,'store'])->name('add_invoice');
+    Route::get('/view-invoice/{id}',[InvoiceController::class,'show'])->name('view_invoice');
       //**********************END OF INVOICES ROUTES ******************//
 
       //********************** PAYMENTS ROUTES ******************//
     Route::get('/get-payments',[PaymentsController::class,'index'])->name('getpayments');
+    Route::post('/make-payment',[PaymentsController::class,'payment'])->name('make_payment');
       //**********************END OF PAYMENTS ROUTES ******************//
 
 });

@@ -54,12 +54,12 @@ Customers
                 <form action="{{route('add_customer')}}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label for="allocation_status">Ful Name</label>
+                        <label for="">Ful Name</label>
                         <input type="text" class="form-control" name="name" required
                             id="">
                     </div>
                     <div class="form-group">
-                        <label for="allocation_status">Address</label>
+                        <label for="">Address</label>
                         <textarea name="address" id="address" cols="10" rows="3" class="form-control" required></textarea>
                     </div>
                     <div class="form-group">
@@ -95,13 +95,13 @@ Customers
                 <form action="{{route('update_customer')}}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label for="allocation_status">Ful Name</label>
+                        <label for="">Ful Name</label>
                         <input type="text" class="form-control" name="name" id="name" required
                             id="">
                     </div>
                     <input type="hidden" name="id" id="rowid">
                     <div class="form-group">
-                        <label for="allocation_status">Address</label>
+                        <label for="">Address</label>
                         <textarea name="address"  cols="10" rows="3" id="address" class="form-control" required></textarea>
                     </div>
                     <div class="form-group">
@@ -135,12 +135,12 @@ Customers
             </div>
             <div class="modal-body">
                     <div class="form-group">
-                        <label for="allocation_status">Ful Name</label>
+                        <label for="">Ful Name</label>
                         <input type="text" class="form-control" name="name" id="view_name" readonly
                             id="">
                     </div>
                     <div class="form-group">
-                        <label for="allocation_status">Address</label>
+                        <label for="">Address</label>
                         <textarea name="address"  cols="10" rows="3" id="view_address" class="form-control" readonly></textarea>
                     </div>
                     <div class="form-group">

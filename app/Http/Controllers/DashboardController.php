@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\customers;
+use App\Models\invoices;
+use App\Models\invoice_lines;
+use App\Models\payments;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,10 +17,14 @@ class DashboardController extends Controller
     public function index(){
         $operators = User::all()->count();
         $customers = customers::all()->count();
+        $invoices = invoices::all()->count();
+        $payments = payments::all()->count();
         return view('index')->with(
             [
                 'operators'=>$operators,
                 'customers'=>$customers,
+                'invoices'=>$invoices,
+                'payments'=>$payments,
             ]);
     }
     public function profile(){
